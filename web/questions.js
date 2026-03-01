@@ -1,6 +1,17 @@
 const fallbackQuestionTranslation =
   'Український переклад для цього питання ще додається. Зараз доступний німецький оригінал.';
 const fallbackOptionTranslation = 'Український переклад цього варіанту ще додається.';
+const localPdfPath = '../data/official_bamf_questions.pdf';
+const officialPdfUrl =
+  'https://www.bamf.de/SharedDocs/Anlagen/DE/Integration/Einbuergerung/gesamtfragenkatalog-lebenindeutschland.pdf?__blob=publicationFile&v=23';
+const imageQuestionPages = new Map([
+  [21, 9],
+  [130, 48],
+  [209, 78],
+  [226, 85],
+  [301, 117],
+  [308, 120]
+]);
 
 const quizQuestionBank = Array.isArray(window.quizQuestionBank) ? window.quizQuestionBank : [];
 const quizQuestionOverrides = Array.isArray(window.quizQuestions) ? window.quizQuestions : [];
@@ -210,6 +221,7 @@ async function loadAllQuestions() {
 
 function buildQuestionCard(question) {
   const state = stateFor(question.id);
+  const imagePage = imageQuestionPages.get(question.id) || null;
   const optionMarkup = question.options
     .map((option, index) => {
       const isAnswered = state.selectedIndex !== null;
@@ -272,6 +284,28 @@ function buildQuestionCard(question) {
   const supportPill = question.hasFullSupport
     ? '<span class="question-card__meta-pill">Є ключ і переклад</span>'
     : '<span class="question-card__meta-pill">Дані ще доповнюються</span>';
+  const visualPill = imagePage
+    ? '<span class="question-card__meta-pill">Є офіційне зображення</span>'
+    : '';
+  const visualBlock = imagePage
+    ? `
+      <div class="question-card__visual">
+        <p class="question-card__visual-title">У цьому питанні є зображення</p>
+        <p class="question-card__visual-text">
+          У витягнутому тексті офіційного каталогу картинки не зберігаються. Тут є пряме
+          посилання на точну сторінку PDF з оригінальними ілюстраціями BAMF.
+        </p>
+        <div class="question-card__visual-actions">
+          <a class="question-card__btn question-card__btn--link" href="${localPdfPath}#page=${imagePage}" target="_blank" rel="noreferrer">
+            Відкрити зображення
+          </a>
+          <a class="question-card__btn question-card__btn--ghost question-card__btn--link" href="${officialPdfUrl}#page=${imagePage}" target="_blank" rel="noreferrer">
+            BAMF PDF
+          </a>
+        </div>
+      </div>
+    `
+    : '';
 
   const card = document.createElement('article');
   card.className = 'question-card question-card--single';
@@ -295,7 +329,9 @@ function buildQuestionCard(question) {
       <span class="question-card__meta-pill">Офіційне BAMF питання</span>
       <span class="question-card__meta-pill">4 варіанти відповіді</span>
       ${supportPill}
+      ${visualPill}
     </div>
+    ${visualBlock}
     <div class="question-card__translation" ${state.showTranslation ? '' : 'hidden'}>
       <p class="question-card__translation-title">Український переклад</p>
       <p class="question-card__translation-text">${question.questionUk}</p>
