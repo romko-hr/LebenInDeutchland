@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leben in Deutschland: питання по одному</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">Leben in Deutschland</p>
+          <h1>Питання по одному</h1>
+          <p class="hero__lead">
+            Тут показується одне офіційне питання за раз. Відповідай, перевіряй себе і
+            переходь далі кнопками або одразу стрибай на потрібний номер.
+          </p>
+        </div>
+        <div class="hero__stats">
+          <div class="stat-card">
+            <span id="quiz-total" class="stat-card__value">0</span>
+            <span class="stat-card__label">питань у тренажері</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card__value">1</span>
+            <span class="stat-card__label">питання на екрані</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card__value">DE / UK</span>
+            <span class="stat-card__label">німецька + переклад</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="toolbar" aria-label="Навігація по сторінках">
+        <a class="page-link" href="./index.html">До карток слів</a>
+        <a class="page-link" href="../">На головну</a>
+      </section>
+
+      <section class="quiz" aria-labelledby="single-quiz-heading">
+        <div class="section-head">
+          <p class="eyebrow">Тренажер</p>
+          <h2 id="single-quiz-heading">Одне питання, чітка перевірка</h2>
+        </div>
+
+        <div class="question-shell">
+          <p id="question-progress" class="question-progress"></p>
+
+          <div class="question-nav">
+            <div class="question-nav__buttons">
+              <button id="prev-question" class="question-nav__button" type="button">
+                Назад
+              </button>
+              <button id="next-question" class="question-nav__button" type="button">
+                Далі
+              </button>
+            </div>
+          </div>
+
+          <div id="question-stage" class="question-stage"></div>
+
+          <div class="question-jump" aria-labelledby="question-jump-heading">
+            <p id="question-jump-heading" class="question-jump__label">Перейти до номера</p>
+            <div id="question-jump-list" class="question-jump__list"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="./questions-data.js" defer></script>
+    <script src="./questions.js" defer></script>
+  </body>
+</html>
