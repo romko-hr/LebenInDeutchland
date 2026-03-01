@@ -705,11 +705,13 @@ h2 {
 }
 
 .question-shell {
+  min-width: 0;
   display: grid;
   gap: 18px;
 }
 
 .question-stage {
+  min-width: 0;
   position: relative;
   z-index: 1;
   display: grid;
@@ -794,6 +796,7 @@ h2 {
 }
 
 .question-card--single {
+  width: 100%;
   max-width: 880px;
 }
 
@@ -883,5 +886,73 @@ h2 {
 
   .flashcard {
     height: 228px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-shell {
+    width: calc(100% - 12px);
+    padding-top: 8px;
+    padding-bottom: 24px;
+  }
+
+  .hero,
+  .toolbar,
+  .auxiliary,
+  .deck,
+  .quiz {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .toolbar {
+    gap: 10px;
+  }
+
+  .page-link {
+    width: 100%;
+    min-height: 44px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .stat-card {
+    padding: 12px 14px;
+  }
+
+  .stat-card__value {
+    font-size: 1.55rem;
+  }
+
+  .question-card,
+  .question-card--single {
+    width: 100%;
+    max-width: 100%;
+    padding: 14px;
+  }
+
+  .question-card__text {
+    font-size: 0.98rem;
+  }
+
+  .question-card__option {
+    padding: 10px 12px;
+  }
+
+  .question-card__option-letter {
+    width: 24px;
+    height: 24px;
+    flex-basis: 24px;
+  }
+
+  .question-jump__list {
+    gap: 6px;
+  }
+
+  .question-jump__button {
+    min-width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    font-size: 0.9rem;
   }
 }
