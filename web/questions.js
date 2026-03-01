@@ -1,3 +1,8 @@
+const fallbackQuestionTranslation =
+  'Український переклад для цього питання ще додається. Зараз доступний німецький оригінал.';
+const fallbackOptionTranslation = 'Український переклад цього варіанту ще додається.';
+
+const quizQuestionBank = Array.isArray(window.quizQuestionBank) ? window.quizQuestionBank : [];
 const quizQuestionOverrides = Array.isArray(window.quizQuestions) ? window.quizQuestions : [];
 
 const quizTotal = document.querySelector('#quiz-total');
@@ -139,28 +144,61 @@ function parseTsv(text) {
   });
 }
 
+function buildQuestionFromSource(baseQuestion, override) {
+  const options = (baseQuestion.options || []).map((option, index) => ({
+    de: override?.options?.[index]?.de || option.de,
+    uk: override?.options?.[index]?.uk || option.uk || fallbackOptionTranslation
+  }));
+
+  const correctIndex = Number.isInteger(override?.correctIndex)
+    ? override.correctIndex
+    : Number.isInteger(baseQuestion.correctIndex)
+      ? baseQuestion.correctIndex
+      : null;
+  const questionUk = override?.questionUk || baseQuestion.questionUk || fallbackQuestionTranslation;
+
+  const hasTranslations =
+    questionUk !== fallbackQuestionTranslation &&
+    options.length > 0 &&
+    options.every((option) => option.uk && option.uk !== fallbackOptionTranslation);
+
+  return {
+    id: baseQuestion.id,
+    questionDe: override?.questionDe || baseQuestion.questionDe,
+    questionUk,
+    options,
+    correctIndex,
+    hasFullSupport: Number.isInteger(correctIndex) && hasTranslations
+  };
+}
+
 function buildQuestionFromRow(row) {
   const id = Number(row.question_id);
   const override = overrideMap.get(id);
   const rawOptions = [row.option_a, row.option_b, row.option_c, row.option_d].filter(Boolean);
-  const fallbackQuestionTranslation =
-    'Український переклад для цього питання ще додається. Зараз доступний німецький оригінал.';
-  const fallbackOptionTranslation = 'Український переклад цього варіанту ще додається.';
 
-  return {
-    id,
-    questionDe: row.question_text,
-    questionUk: override?.questionUk || fallbackQuestionTranslation,
-    options: rawOptions.map((optionDe, index) => ({
-      de: optionDe,
-      uk: override?.options?.[index]?.uk || fallbackOptionTranslation
-    })),
-    correctIndex: Number.isInteger(override?.correctIndex) ? override.correctIndex : null,
-    hasFullSupport: Boolean(override)
-  };
+  return buildQuestionFromSource(
+    {
+      id,
+      questionDe: row.question_text,
+      questionUk: fallbackQuestionTranslation,
+      options: rawOptions.map((optionDe) => ({
+        de: optionDe,
+        uk: fallbackOptionTranslation
+      })),
+      correctIndex: null
+    },
+    override
+  );
 }
 
 async function loadAllQuestions() {
+  if (quizQuestionBank.length) {
+    return [...quizQuestionBank]
+      .sort((left, right) => left.id - right.id)
+      .map((question) => buildQuestionFromSource(question, overrideMap.get(question.id)));
+  }
+
   const response = await fetch('../data/lid_questions_general_bayern.tsv');
   if (!response.ok) {
     throw new Error(`Failed to load question data: ${response.status}`);
@@ -232,8 +270,8 @@ function buildQuestionCard(question) {
   }
 
   const supportPill = question.hasFullSupport
-    ? '<span class="question-card__meta-pill">Є перевірка відповіді</span>'
-    : '<span class="question-card__meta-pill">Ключ відповіді ще додається</span>';
+    ? '<span class="question-card__meta-pill">Є ключ і переклад</span>'
+    : '<span class="question-card__meta-pill">Дані ще доповнюються</span>';
 
   const card = document.createElement('article');
   card.className = 'question-card question-card--single';
