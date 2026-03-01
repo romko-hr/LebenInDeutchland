@@ -6,9 +6,14 @@ const officialPdfUrl =
   'https://www.bamf.de/SharedDocs/Anlagen/DE/Integration/Einbuergerung/gesamtfragenkatalog-lebenindeutschland.pdf?__blob=publicationFile&v=23';
 const imageQuestionPages = new Map([
   [21, 9],
+  [55, 21],
+  [70, 27],
   [130, 48],
+  [181, 67],
   [209, 78],
+  [216, 81],
   [226, 85],
+  [235, 88],
   [301, 117],
   [308, 120]
 ]);
