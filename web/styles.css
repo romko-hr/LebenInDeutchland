@@ -22,6 +22,7 @@
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
   color: var(--ink);
   font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
   background:
@@ -477,6 +478,7 @@ h2 {
 }
 
 .question-card {
+  min-width: 0;
   padding: 18px;
   border-radius: 24px;
   border: 1px solid rgba(22, 33, 58, 0.1);
@@ -488,6 +490,7 @@ h2 {
 
 .question-card__top {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 12px;
   align-items: center;
@@ -505,17 +508,21 @@ h2 {
 
 .question-card__actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
+  min-width: 0;
 }
 
 .question-card__btn {
+  max-width: 100%;
   border: 1px solid rgba(22, 33, 58, 0.12);
   background: rgba(255, 255, 255, 0.9);
   color: var(--ink);
   border-radius: 12px;
   padding: 10px 12px;
   cursor: pointer;
+  white-space: normal;
 }
 
 .question-card__btn--link {
@@ -618,6 +625,7 @@ h2 {
 
 .question-card__option {
   width: 100%;
+  min-width: 0;
   display: flex;
   gap: 10px;
   align-items: flex-start;
@@ -629,6 +637,15 @@ h2 {
   cursor: pointer;
   text-align: left;
   transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.question-card__option span:last-child,
+.question-card__translation-text,
+.question-card__visual-text,
+.question-progress {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .question-card__option:hover {
@@ -837,6 +854,23 @@ h2 {
   .question-nav__button {
     flex: 1 1 0;
     min-width: 0;
+  }
+
+  .question-card__top,
+  .question-card__actions,
+  .question-card__visual-actions {
+    align-items: stretch;
+  }
+
+  .question-card__actions,
+  .question-card__visual-actions {
+    width: 100%;
+  }
+
+  .question-card__btn,
+  .question-card__btn--link {
+    width: 100%;
+    justify-content: center;
   }
 
   .card-grid {
